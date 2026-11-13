@@ -75,6 +75,8 @@ export const copy = {
       tiere: "الحيوانات",
       talk: "المحادثة",
       sheet: "مراجعة الشيت",
+      hoeren: "السمع",
+      schreiben: "رتّب الجملة",
     },
   },
   en: {
@@ -149,6 +151,8 @@ export const copy = {
       tiere: "Animals",
       talk: "Talk",
       sheet: "Revision sheet",
+      hoeren: "Listening",
+      schreiben: "Word order",
     },
   },
   de: {
@@ -223,6 +227,8 @@ export const copy = {
       tiere: "Tiere",
       talk: "Gespräch",
       sheet: "Wiederholung",
+      hoeren: "Hören",
+      schreiben: "Ordne",
     },
   },
 } as const;

@@ -1,4 +1,4 @@
-export type UnitId = "hallo" | "kann" | "kleidung" | "tag" | "tiere" | "sheet";
+export type UnitId = "hallo" | "kann" | "kleidung" | "tag" | "tiere" | "sheet" | "hoeren" | "schreiben";
 
 export type Word = {
   id: string;
@@ -34,6 +34,7 @@ export type Quiz = {
   options: string[];
   correct: number;
   image?: string;
+  audio?: string;
 };
 
 export type Line = { who: "A" | "B"; text: string };
@@ -45,6 +46,8 @@ export const UNITS: { id: UnitId; ar: string; de: string }[] = [
   { id: "tag", ar: "My day", de: "Tagesablauf" },
   { id: "tiere", ar: "Animals", de: "Die Tiere" },
   { id: "sheet", ar: "Revision sheet", de: "Wiederholung" },
+  { id: "hoeren", ar: "Listening", de: "Hören" },
+  { id: "schreiben", ar: "Word order", de: "Ordne" },
 ];
 
 export const WORDS: Word[] = [
@@ -63,18 +66,18 @@ export const WORDS: Word[] = [
   { id: "tanzen", unit: "kann", de: "tanzen", ar: "يرقص", en: "to dance", sentence: "Ich tanze gern.", image: "/vocab/tanzen.jpg" },
   { id: "singen", unit: "kann", de: "singen", ar: "يغني", en: "to sing", sentence: "Ich kann gut singen.", image: "/vocab/singen.jpg" },
   { id: "fussball", unit: "kann", de: "Fußball spielen", ar: "يلعب كرة", en: "to play football", sentence: "Ich kann gut Fußball spielen.", image: "/vocab/fussball.jpg" },
-  { id: "basketball", unit: "kann", de: "Basketball spielen", ar: "يلعب كرة سلة", en: "to play basketball", sentence: "Ich spiele Basketball." },
-  { id: "tennis", unit: "kann", de: "Tennis spielen", ar: "يلعب تنس", en: "to play tennis", sentence: "Er spielt Tennis." },
-  { id: "malen", unit: "kann", de: "malen", ar: "يرسم", en: "to draw", sentence: "Du malst ein Bild." },
+  { id: "basketball", unit: "kann", de: "Basketball spielen", ar: "يلعب كرة سلة", en: "to play basketball", sentence: "Ich spiele Basketball.", image: "/vocab/basketball.jpg" },
+  { id: "tennis", unit: "kann", de: "Tennis spielen", ar: "يلعب تنس", en: "to play tennis", sentence: "Er spielt Tennis.", image: "/vocab/tennis.jpg" },
+  { id: "malen", unit: "kann", de: "malen", ar: "يرسم", en: "to draw", sentence: "Du malst ein Bild.", image: "/vocab/malen.jpg" },
   { id: "muetze", unit: "kleidung", de: "die Mütze", ar: "طاقية", en: "cap", sentence: "Ich ziehe die Mütze an.", image: "/vocab/muetze.jpg" },
   { id: "schal", unit: "kleidung", de: "der Schal", ar: "شال", en: "scarf", sentence: "Er zieht einen Schal an.", image: "/vocab/schal.jpg" },
   { id: "hut", unit: "kleidung", de: "der Hut", ar: "قبعة", en: "hat", sentence: "Sie zieht den Hut an.", image: "/vocab/hut.jpg" },
   { id: "kurzhose", unit: "kleidung", de: "die Kurzhose", ar: "شورت", en: "shorts", sentence: "Ich ziehe die Kurzhose an.", image: "/vocab/kurzhose.jpg" },
   { id: "turnschuhe", unit: "kleidung", de: "die Turnschuhe", ar: "حذاء رياضي", en: "trainers", sentence: "Anna zieht die Turnschuhe an.", image: "/vocab/turnschuhe.jpg" },
   { id: "socken", unit: "kleidung", de: "die Socken", ar: "شرابات", en: "socks", sentence: "Wir ziehen die Socken an.", image: "/vocab/socken.jpg" },
-  { id: "kleid", unit: "kleidung", de: "das Kleid", ar: "فستان", en: "dress", sentence: "Ich ziehe das Kleid an." },
-  { id: "kalt", unit: "kleidung", de: "kalt", ar: "بارد", en: "cold", sentence: "Heute ist es kalt." },
-  { id: "heiss", unit: "kleidung", de: "heiß", ar: "حر", en: "hot", sentence: "Heute ist es heiß." },
+  { id: "kleid", unit: "kleidung", de: "das Kleid", ar: "فستان", en: "dress", sentence: "Ich ziehe das Kleid an.", image: "/vocab/kleid.jpg" },
+  { id: "kalt", unit: "kleidung", de: "kalt", ar: "بارد", en: "cold", sentence: "Heute ist es kalt.", image: "/vocab/kalt.jpg" },
+  { id: "heiss", unit: "kleidung", de: "heiß", ar: "حر", en: "hot", sentence: "Heute ist es heiß.", image: "/vocab/heiss.jpg" },
   { id: "schlafen", unit: "tag", de: "schlafen", ar: "ينام", en: "to sleep", sentence: "Ich schlafe um neun Uhr.", image: "/vocab/schlafen.jpg" },
   { id: "aufstehen", unit: "tag", de: "aufstehen", ar: "يصحى", en: "to get up", sentence: "Ich stehe um sieben Uhr auf.", image: "/vocab/aufstehen.jpg" },
   { id: "fruehstueck", unit: "tag", de: "frühstücken", ar: "يتفطر", en: "to have breakfast", sentence: "Ich frühstücke um acht Uhr.", image: "/vocab/fruehstueck.jpg" },
@@ -305,6 +308,56 @@ export const QUIZZES: Quiz[] = [
   { id: "b18", unit: "tiere", q: "Der Tiger ist schneller als der Fuchs.", options: ["richtig", "falsch"], correct: 0 },
   { id: "b19", unit: "tiere", q: "Der Tiger ist klein.", options: ["falsch", "richtig"], correct: 0 },
   { id: "b20", unit: "tiere", q: "Wer ist größer?", options: ["Das Känguru", "Das Eichhörnchen"], correct: 0 },
+  { id: "h1", unit: "hoeren", q: "Hör zu. Ich kann springen.", options: ["richtig", "falsch"], correct: 0, audio: "/audio/springen.mp3" },
+  { id: "h2", unit: "hoeren", q: "Hör zu. Wer kann gut schwimmen?", options: ["Das Kind kann gut schwimmen.", "Das Kind kann nicht schwimmen."], correct: 0, audio: "/audio/schwimmen.mp3" },
+  { id: "h3", unit: "hoeren", q: "Hör zu. Was kann Alex?", options: ["laufen", "singen", "tanzen"], correct: 0, audio: "/audio/alex-laufen.mp3" },
+  { id: "h4", unit: "hoeren", q: "Hör zu. Mariam kann singen.", options: ["falsch", "richtig"], correct: 0, audio: "/audio/mariam-singen.mp3" },
+  { id: "h5", unit: "hoeren", q: "Hör zu. Mariam kann gut tanzen.", options: ["richtig", "falsch"], correct: 0, audio: "/audio/mariam-tanzen.mp3" },
+  { id: "h6", unit: "hoeren", q: "Hör zu. Wir können ___.", options: ["hoch springen", "Fußball spielen", "malen"], correct: 0, audio: "/audio/hoch-springen.mp3" },
+  { id: "h7", unit: "hoeren", q: "Hör zu. Du kannst singen.", options: ["falsch", "richtig"], correct: 0, audio: "/audio/nicht-singen.mp3" },
+  { id: "h8", unit: "hoeren", q: "Hör zu. Wie heißt der Junge?", options: ["Tim", "Tom", "Max"], correct: 0, audio: "/audio/tag-1.mp3" },
+  { id: "h9", unit: "hoeren", q: "Hör zu. Tim steht um 8 Uhr auf.", options: ["falsch", "richtig"], correct: 0, audio: "/audio/tag-1.mp3" },
+  { id: "h10", unit: "hoeren", q: "Hör zu. Tim geht um 8 Uhr in die Schule.", options: ["richtig", "falsch"], correct: 0, audio: "/audio/tag-1.mp3" },
+  { id: "h11", unit: "hoeren", q: "Hör zu. Was macht Anna am Nachmittag?", options: ["Sie spielt Fußball.", "Sie schläft.", "Sie liest ein Buch."], correct: 0, audio: "/audio/tag-2.mp3" },
+  { id: "h12", unit: "hoeren", q: "Hör zu. Anna isst um ___ Uhr zu Mittag.", options: ["12", "8", "7"], correct: 0, audio: "/audio/tag-2.mp3" },
+  { id: "h13", unit: "hoeren", q: "Hör zu. Was macht Ben am Nachmittag?", options: ["Er spielt im Park.", "Er schläft.", "Er frühstückt."], correct: 0, audio: "/audio/tag-3.mp3" },
+  { id: "h14", unit: "hoeren", q: "Hör zu. Was macht Ben am Abend?", options: ["Er sieht fern.", "Er macht Hausaufgaben.", "Er spielt Fußball."], correct: 0, audio: "/audio/tag-3.mp3" },
+  { id: "h15", unit: "hoeren", q: "Hör zu. Was zieht Lukas an?", options: ["Mütze und Schal", "Schal und Socken", "eine Kurzhose"], correct: 0, audio: "/audio/lukas.mp3" },
+  { id: "h16", unit: "hoeren", q: "Hör zu. Was zieht seine Schwester an?", options: ["die Handschuhe", "einen Schal", "einen Mantel"], correct: 0, audio: "/audio/lukas.mp3" },
+  { id: "h17", unit: "hoeren", q: "Hör zu. Es ist Sommer. Die Schwester zieht eine kurze Hose an. Sie gehen zum Spielplatz.", options: ["richtig", "falsch"], correct: 0, audio: "/audio/spielplatz.mp3" },
+  { id: "h18", unit: "hoeren", q: "Hör zu. Wie ist das Wetter?", options: ["kalt und windig", "warm und sonnig"], correct: 0, audio: "/audio/maha.mp3" },
+  { id: "h19", unit: "hoeren", q: "Hör zu. Was zieht Maha an?", options: ["Mantel und Stiefel", "Mantel und Handschuhe", "eine Mütze"], correct: 0, audio: "/audio/maha.mp3" },
+  { id: "h20", unit: "hoeren", q: "Hör zu. Was zieht der Bruder an?", options: ["Mütze und Handschuhe", "Mantel und Schal", "Turnschuhe"], correct: 0, audio: "/audio/maha.mp3" },
+  { id: "o1", unit: "schreiben", q: "Ordne: kann – Ich – tanzen.", options: ["Ich kann tanzen.", "Kann ich tanzen.", "Ich tanzen kann."], correct: 0 },
+  { id: "o2", unit: "schreiben", q: "Ordne: du – kannst – schwimmen?", options: ["Kannst du schwimmen?", "Du kannst schwimmen.", "Schwimmen du kannst?"], correct: 0 },
+  { id: "o3", unit: "schreiben", q: "Ordne: kannst – du – springen?", options: ["Kannst du springen?", "Du springen kannst?", "Springen kannst du."], correct: 0 },
+  { id: "o4", unit: "schreiben", q: "Ordne: kann – Ja, – ich – singen.", options: ["Ja, ich kann singen.", "Ja, kann ich singen.", "Ich ja kann singen."], correct: 0 },
+  { id: "o5", unit: "schreiben", q: "Ordne: kann – gut – David – laufen.", options: ["David kann gut laufen.", "Kann David gut laufen.", "Gut David kann laufen."], correct: 0 },
+  { id: "o6", unit: "schreiben", q: "Ordne: kannst – Du – gern – schwimmen.", options: ["Du kannst gern schwimmen.", "Kannst du gern schwimmen.", "Gern du kannst schwimmen."], correct: 0 },
+  { id: "o7", unit: "schreiben", q: "Ordne: nicht schnell – Wir – können – laufen.", options: ["Wir können nicht schnell laufen.", "Wir nicht können schnell laufen.", "Können wir nicht schnell laufen."], correct: 0 },
+  { id: "o8", unit: "schreiben", q: "Ordne: dein Bruder – kann – laufen?", options: ["Kann dein Bruder laufen?", "Dein Bruder kann laufen.", "Laufen kann dein Bruder?"], correct: 0 },
+  { id: "o9", unit: "schreiben", q: "Ordne: gut – Daniel – kann – schwimmen.", options: ["Daniel kann gut schwimmen.", "Kann Daniel gut schwimmen.", "Gut kann Daniel schwimmen."], correct: 0 },
+  { id: "o10", unit: "schreiben", q: "Ordne: an / im Winter / zieht / den Schal / Sie.", options: ["Sie zieht im Winter den Schal an.", "Sie an zieht den Schal im Winter.", "Im Winter den Schal zieht sie."], correct: 0 },
+  { id: "o11", unit: "schreiben", q: "Ordne: Ich / an / die Turnschuhe / ziehe.", options: ["Ich ziehe die Turnschuhe an.", "Ich an die Turnschuhe ziehe.", "Ziehe ich die Turnschuhe an."], correct: 0 },
+  { id: "o12", unit: "schreiben", q: "Ordne: an / Was / Omar / zieht?", options: ["Was zieht Omar an?", "Was Omar zieht an?", "Omar zieht was an?"], correct: 0 },
+  { id: "o13", unit: "schreiben", q: "Ordne: du / warum / heute / eine Mütze / an / ziehst?", options: ["Warum ziehst du heute eine Mütze an?", "Warum du ziehst heute eine Mütze an?", "Du ziehst warum eine Mütze an?"], correct: 0 },
+  { id: "o14", unit: "schreiben", q: "Ordne: Mark / zieht / gern / an / eine Jacke.", options: ["Mark zieht gern eine Jacke an.", "Mark an zieht gern eine Jacke.", "Gern Mark zieht eine Jacke an."], correct: 0 },
+  { id: "o15", unit: "schreiben", q: "Ordne: du – Was – ziehst – an?", options: ["Was ziehst du an?", "Was du ziehst an?", "Du ziehst was an?"], correct: 0 },
+  { id: "o16", unit: "schreiben", q: "Ordne: an / ziehst / im Sommer / eine Kurzhose / Du.", options: ["Du ziehst im Sommer eine Kurzhose an.", "Du an ziehst eine Kurzhose im Sommer.", "Im Sommer du ziehst eine Kurzhose."], correct: 0 },
+  { id: "o17", unit: "schreiben", q: "Ordne: um 7 Uhr / Ich / auf / stehe.", options: ["Ich stehe um 7 Uhr auf.", "Ich auf stehe um 7 Uhr.", "Um 7 Uhr ich stehe auf."], correct: 0 },
+  { id: "o18", unit: "schreiben", q: "Ordne: ich / frühstücke / um 8 Uhr.", options: ["Ich frühstücke um 8 Uhr.", "Um 8 Uhr ich frühstücke.", "Frühstücke ich um 8 Uhr."], correct: 0 },
+  { id: "o19", unit: "schreiben", q: "Ordne: zu Mittag / Ich / um 12 Uhr / esse.", options: ["Ich esse um 12 Uhr zu Mittag.", "Ich zu Mittag esse um 12 Uhr.", "Esse ich um 12 Uhr zu Mittag."], correct: 0 },
+  { id: "o20", unit: "schreiben", q: "Ordne: ich / ins Bett / um 9 Uhr / gehe.", options: ["Ich gehe um 9 Uhr ins Bett.", "Ich ins Bett gehe um 9 Uhr.", "Um 9 Uhr ich gehe ins Bett."], correct: 0 },
+  { id: "o21", unit: "schreiben", q: "Ordne: Du – tanzen – kannst.", options: ["Du kannst tanzen.", "Du tanzen kannst.", "Kannst tanzen du."], correct: 0 },
+  { id: "o22", unit: "schreiben", q: "Ordne: Könnt – Ihr – tanzen – gut.", options: ["Könnt ihr gut tanzen?", "Ihr könnt gut tanzen.", "Gut könnt ihr tanzen?"], correct: 0 },
+  { id: "o23", unit: "schreiben", q: "Ordne: zieht – Ali – Was – an – heute?", options: ["Was zieht Ali heute an?", "Was Ali zieht heute an?", "Ali zieht was heute an?"], correct: 0 },
+  { id: "o24", unit: "schreiben", q: "Ordne: Socken – an – Ich – im Winter – ziehe.", options: ["Ich ziehe im Winter Socken an.", "Ich an ziehe Socken im Winter.", "Im Winter ich ziehe Socken."], correct: 0 },
+  { id: "o25", unit: "schreiben", q: "Ordne: dein – laufen – kann – Bruder?", options: ["Kann dein Bruder laufen?", "Dein Bruder kann laufen?", "Laufen kann dein Bruder?"], correct: 0 },
+  { id: "o26", unit: "schreiben", q: "Ordne: zieht – Wer – einen – an – Hut?", options: ["Wer zieht einen Hut an?", "Wer einen Hut zieht an?", "Einen Hut zieht wer an?"], correct: 0 },
+  { id: "o27", unit: "schreiben", q: "Ordne: du – kannst – Was – machen?", options: ["Was kannst du machen?", "Was du kannst machen?", "Du kannst was machen?"], correct: 0 },
+  { id: "o28", unit: "schreiben", q: "Ordne: Vater – Mein – kann – schwimmen.", options: ["Mein Vater kann schwimmen.", "Kann mein Vater schwimmen.", "Vater mein kann schwimmen."], correct: 0 },
+  { id: "o29", unit: "schreiben", q: "Ordne: schläfst – um wie viel Uhr – du?", options: ["Um wie viel Uhr schläfst du?", "Du schläfst um wie viel Uhr?", "Schläfst um wie viel Uhr du?"], correct: 0 },
+  { id: "o30", unit: "schreiben", q: "Ordne: können – Wir – tanzen – nicht.", options: ["Wir können nicht tanzen.", "Wir nicht können tanzen.", "Können wir nicht tanzen."], correct: 0 },
 ];
 
 export const DIALOGUE: Line[] = [

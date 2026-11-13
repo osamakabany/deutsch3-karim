@@ -23,6 +23,13 @@ function rateLabel(rate: number, t: (typeof copy)[Lang]) {
   return t.normal;
 }
 
+function publicUrl(path?: string) {
+  if (!path) return "";
+  if (path.startsWith("data:") || path.startsWith("blob:") || path.startsWith("http")) return path;
+  const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+  return `${base}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
 function meaning(word: Word, lang: Lang) {
   if (lang === "ar") return word.ar;
   if (lang === "de") return word.de;
@@ -73,7 +80,7 @@ function WordCard({
   return (
     <article className="overflow-hidden rounded-card border border-line bg-paper">
       {word.image ? (
-        <img src={word.image} alt="" className="aspect-square w-full object-cover" />
+        <img src={publicUrl(word.image)} alt="" className="aspect-square w-full object-cover" />
       ) : null}
       <div className="flex flex-col gap-3 p-5">
         <p dir="ltr" className="font-display text-4xl leading-tight text-ink">
@@ -302,7 +309,7 @@ export function LearnApp() {
               {t.newWord}
             </button>
           ) : null}
-          {UNITS.filter((item) => item.id !== "sheet").map((item) => {
+          {UNITS.filter((item) => item.id !== "sheet" && item.id !== "hoeren" && item.id !== "schreiben").map((item) => {
             const list = words.filter((word) => word.unit === item.id);
             return (
               <section key={item.id} id={`unit-${item.id}`} className="flex flex-col gap-4">
@@ -336,7 +343,7 @@ export function LearnApp() {
 
       {tab === "rules" ? (
         <div className="flex flex-col gap-10">
-          {UNITS.filter((item) => item.id !== "sheet").map((item) => {
+          {UNITS.filter((item) => item.id !== "sheet" && item.id !== "hoeren" && item.id !== "schreiben").map((item) => {
             const list = tables.filter((table) => table.unit === item.id);
             if (list.length === 0) return null;
             return (
@@ -417,7 +424,10 @@ export function LearnApp() {
                 {t.question} {step + 1} {t.of} {quizList.length}
               </p>
               {current.image ? (
-                <img src={current.image} alt="" className="mt-3 aspect-square w-full rounded-2xl object-cover" />
+                <img src={publicUrl(current.image)} alt="" className="mt-3 aspect-square w-full rounded-2xl object-cover" />
+              ) : null}
+              {current.audio ? (
+                <audio key={current.audio + current.id} controls preload="none" src={publicUrl(current.audio)} className="mt-3 w-full" />
               ) : null}
               <h2 className="mt-2 text-2xl">{quizLine(current.id, current.q, deck.lang)}</h2>
               <div className="mt-4 flex flex-col gap-2">
@@ -639,7 +649,7 @@ function WordEditor({
         <h2 className="mb-3 font-display text-2xl">{labels.word}</h2>
         <div className="flex flex-col gap-2">
           {draft.image ? (
-            <img src={draft.image} alt="" className="aspect-square w-full rounded-2xl object-cover" />
+            <img src={publicUrl(draft.image)} alt="" className="aspect-square w-full rounded-2xl object-cover" />
           ) : (
             <div className="grid aspect-square place-items-center rounded-2xl border border-dashed border-line text-ink/60">
               {labels.pictureRequired}
@@ -746,7 +756,7 @@ function QuizAdder({ unit, labels, onSave }: { unit: UnitId | "talk"; labels: (t
         onSave({ id: `q${Date.now()}`, unit, q, options, correct, image: image || undefined });
       }}
     >
-      {image ? <img src={image} alt="" className="aspect-square w-full rounded-2xl object-cover" /> : null}
+      {image ? <img src={publicUrl(image)} alt="" className="aspect-square w-full rounded-2xl object-cover" /> : null}
       <label className="flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-line">
         {image ? labels.changePicture : labels.pictureOptional}
         <input
