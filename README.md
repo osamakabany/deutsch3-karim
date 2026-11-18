@@ -1,7 +1,7 @@
 # Deutsch 3
 
-Grade 3 German practice: words, grammar, dialogue, listening, word order, and the trimester revision sheet.
+The only public link. Update this same site on every change. Do not publish a new URL.
 
-Live site: https://deutsch3-karim.humble-walkover.workers.dev
+https://osamakabany.github.io/deutsch3-karim/
 
-Lessons: Hallo, Ich kann, Die Kleidung, Tagesablauf, Die Tiere. Quizzes: Wiederholung, Hören, Ordne.
+To publish: build with `vite build --base=/deutsch3-karim/`, save the rendered page as `index.html` inside the static output, and force-push that folder to the `gh-pages` branch. GitHub Pages serves that branch at the link above.
