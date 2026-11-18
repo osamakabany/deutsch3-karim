@@ -12,7 +12,7 @@ import {
   type Word,
 } from "@/lib/curriculum";
 import { useDeck, type ThemeName } from "@/lib/deck";
-import { copy, glossOf, noteOf, quizChoice, quizLine, type Lang } from "@/lib/i18n";
+import { copy, noteOf, quizChoice, quizLine, type Lang } from "@/lib/i18n";
 import { playMark, speakGerman, speakLines, type VoiceKind } from "@/lib/speech";
 
 type Tab = "words" | "rules" | "talk" | "quiz" | "settings";
@@ -121,12 +121,30 @@ function WordCard({
   );
 }
 
+function speakLine(row: { left: string; stem: string; end: string; tail?: string }) {
+  const form = `${row.stem}${row.end}${row.tail ? ` ${row.tail}` : ""}`.replace(/\s+/g, " ").trim();
+  const first = row.left.split("/")[0]?.trim() ?? "";
+  if (/^(ich|du|er|sie|wir|ihr|es)$/i.test(first) && !form.toLowerCase().startsWith(first.toLowerCase())) {
+    return `${first} ${form}`;
+  }
+  return form;
+}
+
 function RuleTable({ table, lang, listen, onSpeak }: { table: Table; lang: Lang; listen: string; onSpeak: (text: string) => void }) {
+  const order = ["ich", "du", "er / sie / es", "ihr", "sie / Sie", "wir"];
+  const rows = [...table.rows].sort((a, b) => {
+    const ai = order.indexOf(a.left);
+    const bi = order.indexOf(b.left);
+    if (ai === -1 && bi === -1) return 0;
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
   return (
     <article className="rounded-card border border-line bg-paper p-5">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <h2 dir="ltr" className="font-display text-3xl">
+          <h2 dir="ltr" className="font-display text-4xl">
             {table.title}
           </h2>
           <p className="mt-1 text-ink/70">{noteOf(table.id, table.ar, lang)}</p>
@@ -136,23 +154,22 @@ function RuleTable({ table, lang, listen, onSpeak }: { table: Table; lang: Lang;
         </button>
       </div>
       <div className="overflow-hidden rounded-2xl border border-line">
-        {table.rows.map((row) => (
-          <div key={row.left} className="grid grid-cols-[5.5rem_1fr_auto] items-center gap-2 border-b border-line px-3 py-3 last:border-b-0">
-            <span dir="ltr" className="text-lg">
+        {rows.map((row) => (
+          <button
+            key={row.left}
+            type="button"
+            className="grid w-full grid-cols-[7rem_1fr] items-center gap-2 border-b border-line px-3 py-4 text-left last:border-b-0"
+            onClick={() => onSpeak(speakLine(row))}
+          >
+            <span dir="ltr" className="text-2xl font-semibold text-accent">
               {row.left}
             </span>
-            <span dir="ltr" className="font-display text-2xl">
+            <span dir="ltr" className="font-display text-4xl text-ink">
               {row.stem}
               <span className="text-accent">{row.end}</span>
-              {row.tail ? (
-                <>
-                  {" "}
-                  <span className="text-lg text-ink/50">…</span> <span className="text-accent">{row.tail}</span>
-                </>
-              ) : null}
+              {row.tail ? <span className="text-accent"> {row.tail}</span> : null}
             </span>
-            <span className="text-sm text-ink/60">{glossOf(row.gloss, lang)}</span>
-          </div>
+          </button>
         ))}
       </div>
     </article>
