@@ -30,6 +30,7 @@ export const copy = {
     question: "سؤال",
     of: "من",
     correct: "صح",
+    wrong: "غلط",
     tryAgain: "تاني",
     deleteQuestion: "احذف السؤال",
     newQuestion: "سؤال جديد",
@@ -106,6 +107,7 @@ export const copy = {
     question: "Question",
     of: "of",
     correct: "Correct",
+    wrong: "Wrong",
     tryAgain: "Try again",
     deleteQuestion: "Delete question",
     newQuestion: "New question",
@@ -182,6 +184,7 @@ export const copy = {
     question: "Frage",
     of: "von",
     correct: "Richtig",
+    wrong: "Falsch",
     tryAgain: "Noch einmal",
     deleteQuestion: "Frage löschen",
     newQuestion: "Neue Frage",
@@ -322,24 +325,6 @@ const QUIZ: Record<string, { q: L10n; options?: L10n[] }> = {
     options: [
       { ar: "صح", en: "true", de: "richtig" },
       { ar: "غلط", en: "false", de: "falsch" },
-    ],
-  },
-  q14: {
-    q: { ar: "die Mütze يعني:", en: "die Mütze means:", de: "die Mütze heißt:" },
-    options: [
-      { ar: "طاقية", en: "cap", de: "Mütze" },
-      { ar: "شال", en: "scarf", de: "Schal" },
-      { ar: "شورت", en: "shorts", de: "Kurzhose" },
-      { ar: "شرابات", en: "socks", de: "Socken" },
-    ],
-  },
-  q15: {
-    q: { ar: "der Schal يعني:", en: "der Schal means:", de: "der Schal heißt:" },
-    options: [
-      { ar: "حذاء", en: "shoe", de: "Schuh" },
-      { ar: "شال", en: "scarf", de: "Schal" },
-      { ar: "نمر", en: "tiger", de: "Tiger" },
-      { ar: "قبعة شمس", en: "sun hat", de: "Hut" },
     ],
   },
   q19: {

@@ -78,13 +78,11 @@ function WordCard({
 }) {
   const gloss = meaning(word, lang);
   return (
-    <article className="grid grid-cols-[6.5rem_1fr] items-center gap-3 rounded-card border border-line bg-paper p-3">
+    <article className="rounded-card border border-line bg-paper p-3">
       {word.image ? (
-        <img src={publicUrl(word.image)} alt="" className="aspect-square w-full rounded-2xl object-cover" />
-      ) : (
-        <span />
-      )}
-      <div className="flex min-w-0 flex-col gap-2">
+        <img src={publicUrl(word.image)} alt="" className="mx-auto aspect-square w-[19.5rem] max-w-full rounded-2xl object-cover" />
+      ) : null}
+      <div className="mt-3 flex min-w-0 flex-col gap-2">
         <p dir="ltr" className="font-display text-3xl leading-tight text-ink">
           {word.de}
         </p>
@@ -184,8 +182,7 @@ export function LearnApp() {
   const [unit, setUnit] = useState<UnitId>("kann");
   const [quizUnit, setQuizUnit] = useState<UnitId | "talk">("kann");
   const [step, setStep] = useState(0);
-  const [score, setScore] = useState(0);
-  const [picked, setPicked] = useState<number | null>(null);
+  const [picks, setPicks] = useState<Record<string, number>>({});
   const [done, setDone] = useState(false);
   const [mark, setMark] = useState<"ok" | "no" | null>(null);
   const [playing, setPlaying] = useState(false);
@@ -224,6 +221,10 @@ export function LearnApp() {
   const tables = useMemo(() => [...TABLES, ...deck.extraTables], [deck.extraTables]);
   const quizList = quizzes.filter((q) => q.unit === quizUnit);
   const current = quizList[step];
+  const picked = current && picks[current.id] !== undefined ? picks[current.id] : null;
+  const answered = quizList.filter((q) => picks[q.id] !== undefined);
+  const right = answered.filter((q) => picks[q.id] === q.correct).length;
+  const wrong = answered.length - right;
 
   const say = (text: string, pitch?: number) => {
     void speakGerman(text, {
@@ -237,26 +238,32 @@ export function LearnApp() {
   const openQuiz = (id: UnitId | "talk") => {
     setQuizUnit(id);
     setStep(0);
-    setScore(0);
-    setPicked(null);
+    setPicks({});
     setDone(false);
     setMark(null);
     setTab("quiz");
   };
 
   const answer = (index: number) => {
-    if (!current || picked !== null) return;
-    setPicked(index);
+    if (!current || picks[current.id] !== undefined) return;
+    setPicks((prev) => ({ ...prev, [current.id]: index }));
     const good = index === current.correct;
-    if (good) setScore((n) => n + 1);
     setMark(good ? "ok" : "no");
     playMark(good ? "ok" : "no", deck.volume);
-    window.setTimeout(() => {
-      setPicked(null);
-      setMark(null);
-      if (step + 1 >= quizList.length) setDone(true);
-      else setStep((n) => n + 1);
-    }, 900);
+  };
+
+  const move = (dir: -1 | 1) => {
+    setMark(null);
+    if (dir < 0) {
+      if (done) {
+        setDone(false);
+        return;
+      }
+      setStep((n) => Math.max(0, n - 1));
+      return;
+    }
+    if (step + 1 >= quizList.length) setDone(true);
+    else setStep((n) => n + 1);
   };
 
   const playTalk = async () => {
@@ -430,18 +437,31 @@ export function LearnApp() {
           ) : done ? (
             <div className="rounded-card border border-line bg-paper p-8 text-center">
               <p className="font-display text-4xl">
-                {score} / {quizList.length}
+                {right} / {quizList.length}
               </p>
-              <p className="mt-2 text-ink/70">{score === quizList.length ? t.wellDone : t.retryHint}</p>
-              <button type="button" className="mt-5 min-h-12 rounded-full bg-accent px-6 text-paper" onClick={() => openQuiz(quizUnit)}>
-                {t.again}
-              </button>
+              <p className="mt-2 text-lg">
+                {t.correct} {right} · {t.wrong} {wrong}
+              </p>
+              <p className="mt-2 text-ink/70">{right === quizList.length ? t.wellDone : t.retryHint}</p>
+              <div className="mt-5 flex justify-center gap-3">
+                <button type="button" className="min-h-12 min-w-16 rounded-full border border-line text-2xl" onClick={() => move(-1)}>
+                  ‹
+                </button>
+                <button type="button" className="min-h-12 rounded-full bg-accent px-6 text-paper" onClick={() => openQuiz(quizUnit)}>
+                  {t.again}
+                </button>
+              </div>
             </div>
           ) : current ? (
             <div className="rounded-card border border-line bg-paper p-5">
-              <p className="text-sm text-ink/60">
-                {t.question} {step + 1} {t.of} {quizList.length}
-              </p>
+              <div className="mb-2 flex items-center justify-between gap-2 text-sm">
+                <p className="text-ink/60">
+                  {t.question} {step + 1} {t.of} {quizList.length}
+                </p>
+                <p>
+                  {t.correct} {right} · {t.wrong} {wrong}
+                </p>
+              </div>
               {current.passage ? (
                 <div className="mt-3 rounded-2xl bg-sage/15 p-4">
                   <div className="mb-2 flex items-center justify-between gap-2">
@@ -463,38 +483,44 @@ export function LearnApp() {
                 <audio key={current.audio + current.id} controls preload="none" src={publicUrl(current.audio)} className="mt-3 w-full" />
               ) : null}
               <h2 className="mt-2 text-xl">{quizLine(current.id, current.q, deck.lang)}</h2>
-              <div className={current.image ? "mt-3 grid grid-cols-[6.5rem_1fr] items-start gap-3" : "mt-3"}>
-                {current.image ? (
-                  <img src={publicUrl(current.image)} alt="" className="aspect-square w-full rounded-2xl object-cover" />
-                ) : null}
-                <div className="flex flex-col gap-2">
-                  {current.options.map((option, index) => {
-                    const show = picked !== null;
-                    const right = index === current.correct;
-                    const wrong = show && index === picked && !right;
-                    const label = quizChoice(current.id, index, option, deck.lang);
-                    return (
-                      <button
-                        key={`${current.id}-${index}`}
-                        type="button"
-                        dir="auto"
-                        className={
-                          "min-h-11 rounded-2xl border px-3 text-start text-base " +
-                          (show && right ? "border-sage bg-sage text-paper " : "") +
-                          (wrong ? "border-accent text-accent " : "") +
-                          (!show ? "border-line " : "")
-                        }
-                        onClick={() => answer(index)}
-                      >
-                        {label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              {mark ? (
-                <p className="mt-4 text-center font-display text-3xl">{mark === "ok" ? t.correct : t.tryAgain}</p>
+              {current.image ? (
+                <img src={publicUrl(current.image)} alt="" className="mx-auto mt-3 aspect-square w-[19.5rem] max-w-full rounded-2xl object-cover" />
               ) : null}
+              <div className="mt-3 flex flex-col gap-2">
+                {current.options.map((option, index) => {
+                  const show = picked !== null;
+                  const isRight = index === current.correct;
+                  const isWrong = show && index === picked && !isRight;
+                  const label = current.image ? option : quizChoice(current.id, index, option, deck.lang);
+                  return (
+                    <button
+                      key={`${current.id}-${index}`}
+                      type="button"
+                      dir="ltr"
+                      className={
+                        "min-h-12 rounded-2xl border px-4 text-start text-lg " +
+                        (show && isRight ? "border-sage bg-sage text-paper " : "") +
+                        (isWrong ? "border-accent text-accent " : "") +
+                        (!show ? "border-line " : "")
+                      }
+                      onClick={() => answer(index)}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+              {picked !== null ? (
+                <p className="mt-4 text-center font-display text-3xl">{picked === current.correct ? t.correct : t.wrong}</p>
+              ) : null}
+              <div className="mt-4 flex gap-3">
+                <button type="button" className="min-h-12 flex-1 rounded-full border border-line text-2xl disabled:opacity-40" onClick={() => move(-1)} disabled={step === 0}>
+                  ‹
+                </button>
+                <button type="button" className="min-h-12 flex-1 rounded-full border border-line text-2xl" onClick={() => move(1)}>
+                  ›
+                </button>
+              </div>
               {deck.teacher ? (
                 <button type="button" className="mt-3 text-sm text-accent" onClick={() => deck.hideQuiz(current.id)}>
                   {t.deleteQuestion}
