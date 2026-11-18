@@ -78,16 +78,18 @@ function WordCard({
 }) {
   const gloss = meaning(word, lang);
   return (
-    <article className="overflow-hidden rounded-card border border-line bg-paper">
+    <article className="grid grid-cols-[6.5rem_1fr] items-center gap-3 rounded-card border border-line bg-paper p-3">
       {word.image ? (
-        <img src={publicUrl(word.image)} alt="" className="aspect-square w-full object-cover" />
-      ) : null}
-      <div className="flex flex-col gap-3 p-5">
-        <p dir="ltr" className="font-display text-4xl leading-tight text-ink">
+        <img src={publicUrl(word.image)} alt="" className="aspect-square w-full rounded-2xl object-cover" />
+      ) : (
+        <span />
+      )}
+      <div className="flex min-w-0 flex-col gap-2">
+        <p dir="ltr" className="font-display text-3xl leading-tight text-ink">
           {word.de}
         </p>
-        {lang === "de" ? null : <p className="text-lg text-ink/70">{gloss}</p>}
-        <p dir="ltr" className="text-xl text-ink">
+        {lang === "de" ? null : <p className="text-base text-ink/70">{gloss}</p>}
+        <p dir="ltr" className="text-lg text-ink">
           {word.sentence}
         </p>
         <div className="flex flex-wrap gap-2">
@@ -440,9 +442,6 @@ export function LearnApp() {
               <p className="text-sm text-ink/60">
                 {t.question} {step + 1} {t.of} {quizList.length}
               </p>
-              {current.image ? (
-                <img src={publicUrl(current.image)} alt="" className="mt-3 aspect-square w-full rounded-2xl object-cover" />
-              ) : null}
               {current.passage ? (
                 <div className="mt-3 rounded-2xl bg-sage/15 p-4">
                   <div className="mb-2 flex items-center justify-between gap-2">
@@ -463,30 +462,35 @@ export function LearnApp() {
               {current.audio ? (
                 <audio key={current.audio + current.id} controls preload="none" src={publicUrl(current.audio)} className="mt-3 w-full" />
               ) : null}
-              <h2 className="mt-2 text-2xl">{quizLine(current.id, current.q, deck.lang)}</h2>
-              <div className="mt-4 flex flex-col gap-2">
-                {current.options.map((option, index) => {
-                  const show = picked !== null;
-                  const right = index === current.correct;
-                  const wrong = show && index === picked && !right;
-                  const label = quizChoice(current.id, index, option, deck.lang);
-                  return (
-                    <button
-                      key={`${current.id}-${index}`}
-                      type="button"
-                      dir="auto"
-                      className={
-                        "min-h-12 rounded-2xl border px-4 text-start text-lg " +
-                        (show && right ? "border-sage bg-sage text-paper " : "") +
-                        (wrong ? "border-accent text-accent " : "") +
-                        (!show ? "border-line " : "")
-                      }
-                      onClick={() => answer(index)}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
+              <h2 className="mt-2 text-xl">{quizLine(current.id, current.q, deck.lang)}</h2>
+              <div className={current.image ? "mt-3 grid grid-cols-[6.5rem_1fr] items-start gap-3" : "mt-3"}>
+                {current.image ? (
+                  <img src={publicUrl(current.image)} alt="" className="aspect-square w-full rounded-2xl object-cover" />
+                ) : null}
+                <div className="flex flex-col gap-2">
+                  {current.options.map((option, index) => {
+                    const show = picked !== null;
+                    const right = index === current.correct;
+                    const wrong = show && index === picked && !right;
+                    const label = quizChoice(current.id, index, option, deck.lang);
+                    return (
+                      <button
+                        key={`${current.id}-${index}`}
+                        type="button"
+                        dir="auto"
+                        className={
+                          "min-h-11 rounded-2xl border px-3 text-start text-base " +
+                          (show && right ? "border-sage bg-sage text-paper " : "") +
+                          (wrong ? "border-accent text-accent " : "") +
+                          (!show ? "border-line " : "")
+                        }
+                        onClick={() => answer(index)}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
               {mark ? (
                 <p className="mt-4 text-center font-display text-3xl">{mark === "ok" ? t.correct : t.tryAgain}</p>
