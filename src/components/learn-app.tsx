@@ -443,6 +443,23 @@ export function LearnApp() {
               {current.image ? (
                 <img src={publicUrl(current.image)} alt="" className="mt-3 aspect-square w-full rounded-2xl object-cover" />
               ) : null}
+              {current.passage ? (
+                <div className="mt-3 rounded-2xl bg-sage/15 p-4">
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <p className="text-sm text-ink/60">Lies den Text.</p>
+                    <button
+                      type="button"
+                      className="grid size-11 place-items-center rounded-full bg-sage text-paper"
+                      onClick={() => say(current.passage ?? "")}
+                    >
+                      <Volume2 className="size-5" />
+                    </button>
+                  </div>
+                  <p dir="ltr" className="text-xl leading-relaxed text-ink">
+                    {current.passage}
+                  </p>
+                </div>
+              ) : null}
               {current.audio ? (
                 <audio key={current.audio + current.id} controls preload="none" src={publicUrl(current.audio)} className="mt-3 w-full" />
               ) : null}

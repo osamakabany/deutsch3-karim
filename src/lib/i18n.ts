@@ -318,7 +318,7 @@ const QUIZ: Record<string, { q: L10n; options?: L10n[] }> = {
     q: { ar: "Wie alt bist du? إجابة مناسبة:", en: "Wie alt bist du? A good answer is:", de: "Wie alt bist du? Eine gute Antwort:" },
   },
   q12: {
-    q: { ar: "Paul kann nicht schwimmen. الجملة دي:", en: "Paul kann nicht schwimmen. This sentence is:", de: "Paul kann nicht schwimmen. Der Satz ist:" },
+    q: { ar: "Paul kann nicht schwimmen.", en: "Paul kann nicht schwimmen.", de: "Paul kann nicht schwimmen." },
     options: [
       { ar: "صح", en: "true", de: "richtig" },
       { ar: "غلط", en: "false", de: "falsch" },
